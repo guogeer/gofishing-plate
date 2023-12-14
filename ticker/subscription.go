@@ -46,7 +46,7 @@ func batchDeferPurchaseSubscription() {
 		}
 
 		dao.UpdatePurchaseSubscriptionOrderExpiryTime(order.Id, expiryTimeMillis)
-		log.Info("defer purchase subscription order id %s NewExpiryTimeMillis %d", order.Id, expiryTimeMillis)
+		log.Infof("defer purchase subscription order id %d NewExpiryTimeMillis %d", order.Id, expiryTimeMillis)
 
 		// 通知到游戏内
 		SendMsg(order.UId, "FUNC_UpdatePurchaseScription", cmd.M{
