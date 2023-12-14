@@ -1,0 +1,16 @@
+# outpost
+main/*_server
+main/res
+main/log
+main/error.log
+main/outpost.log
+main/config.xml
+main/*.tar.gz
+# grpc 
+pb/*.pb.go
+# vim
+*.swp
+/.idea/
+main/env.sh
+main/config_nova.xml
+internal/pb/*.pb.go

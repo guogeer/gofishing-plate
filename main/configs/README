@@ -1,0 +1,3 @@
+firebase-adminsdk.json	接入firebase云消息推送的认证文件。参见https://firebase.google.com/docs/cloud-messaging/send-message?hl=zh_cn
+googleapis.json	接入google支付/订阅的认证文件
+project.json triwin的BI、google云订阅

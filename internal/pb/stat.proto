@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package=".;pb";
+
+message RoomStat {
+	int32 PlayRoundCount = 1; // 局数
+}
+
+message BingoModeStat {
+	int32 PlayRoundCount = 1; // 局数
+}
+
+message ItemStat {
+	int64 Cost = 1; // 消耗
+	int64 Add = 2; // 产出
+	int32 Count = 3; // 次数
+	int64 CopyNum = 4; // 余额
+}
+
+message UserDayStat {
+	int32 PlayRoundCount = 1;
+	double FirstPayNum = 2;
+	double PayNum = 3;
+	int32 WatchAdNum = 4;
+	bool IsEnter = 5;
+	double RealFirstPayNum = 6; // 首次付费。不考虑测试订单
+	double RealPayNum = 7; // 付费。不考虑测试订单
+}
+
+message StatBin {
+	int32 PlayRoundCount = 1; // 局数
+	int32 OnlineSecs = 2; // 在线时长
+	int64 CostGreenNotes = 3; // 累计消耗绿币 Deprecated
+	int32 ClickButtonLobby = 4; // 点击按钮"lobby"退出次数
+	int32 BingoNum = 5; // BINGO总次数
+	int32 RelativeBreak = 6; // 相对破产次数
+	int32 AbsoluteBreak = 7; // 绝对破产次数
+	double PayNum = 8; // 充值金额
+	map<int32,ItemStat> Items = 9; // 物品消耗产出统计
+	int32 UnlockAreaNum = 10; // 已解锁场景数量
+	map<int32,BingoModeStat> BingoModes = 11; // map<mode,BingoModeStat>
+	int32 HouseNum = 12; // 已购买建筑数
+	map<int32,RoomStat> Rooms = 13; // map<subId,RoomStat>，按照玩法统计
+	string LastPayTime = 14; // 上次付费时间
+	string LastItemWay = 15; // 上次消耗日志
+	string LastEnterTime = 16; // 上次进入游戏时间
+	string LastLeaveTime = 17; // 上次离开时间
+	int32 LoginDayNum = 18; // 连续登陆天数
+	string ClientVersion = 19; // 登陆版本
+	int32 CardNum = 20; // 选卡数
+	map<int32,UserDayStat> Day = 21; // 每天每日统计。KEY格式YYYYMMDD
+	int64 BackBingoCoin = 22; // 返还的BINGO币
+	string LastServer = 23; // 上次访问的server
+	int64 BuildExp = 24; // 建设度经验
+	int32 BuildLevel = 25; // 建设度等级
+	int32 NewHand = 26; // 新老手。1、新手；2、老手
+	double MaxPay = 27; // 最大付费金额
+	int32 LastTicketPrice = 28; // 最近进入房间的票单价
+	int32 LastMissNum = 39; // 上一局漏球数
+	int32 CopyLevel = 40; // 等级
+	int64 CopyDaubAlertsTs = 41; // 数字提示
+	int32 FreeBuyHouseNum = 42; // 历史上已购买建筑数
+}
+
+message Maintain {
+	string StartTime = 1;
+	string EndTime = 2;
+	string Content = 3;
+	string AllowList = 4;
+}

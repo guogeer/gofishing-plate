@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+  <Environment>test</Environment>
+  <!--后台向游戏服请求的校验串-->
+  <Sign>D101C5EFB2FF020307dh965FFE87sks</Sign>
+  <!-- 网络消息校验串头部，长度必须大于8-->
+  <ProductKey>hellokitty</ProductKey>
+  <EnableDebug>true</EnableDebug>
+	<!-- 资源地址，如配置表，优先使用CDN地址 -->
+	<Resource>http://localhost:8001</Resource>
+  <!--游戏数据库主库-->
+    <DataSource>
+  	<!--用户名，下同-->
+    <User>root</User>
+  	<!--密码，下同-->
+    <Password><![CDATA[changeme]]></Password>
+  	<!--地址，必须包含端口，下同-->
+    <Address>127.0.0.1:3306</Address>
+  	<!--数据库名，下同-->
+    <Name>test_game</Name>
+    <MaxIdleConns>10</MaxIdleConns>
+    <MaxOpenConns>20</MaxOpenConns>
+  </DataSource>
+  <!--后台数据库主库-->
+  <ManageDataSource>
+  	<User>root</User>
+  	<Password><![CDATA[changeme]]></Password>
+    <Address>127.0.0.1:3306</Address>
+    <Name>test_manage</Name>
+    <MaxIdleConns>10</MaxIdleConns>
+    <MaxOpenConns>20</MaxOpenConns>
+  </ManageDataSource>
+  <!--游戏数据库从库，没有从库可与主库相同-->
+  <SlaveDataSource>
+  	<User>root</User>
+  	<Password><![CDATA[changeme]]></Password>
+  	<Address>127.0.0.1:3306</Address>
+  	<Name>test_game</Name>
+  	<MaxIdleConns>10</MaxIdleConns>
+  	<MaxOpenConns>20</MaxOpenConns>
+  </SlaveDataSource>
+  <ServerList>
+    <!--平台/后台-->
+    <Server>
+      <Name>plate</Name>
+      <Address>http://localhost</Address>
+    </Server>
+    <!--路由服-->
+    <Server>
+      <Name>router</Name>
+      <Address>127.0.0.1:9103</Address>
+    </Server>
+  </ServerList>
+</Config>
