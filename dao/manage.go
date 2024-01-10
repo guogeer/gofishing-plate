@@ -7,13 +7,13 @@ import (
 )
 
 // 查询字典
-func QueryDictValue(key string) (string, error) {
+func QueryDict(key string) (string, error) {
 	var value string
 	manageDB.QueryRow("select `value` from dict where `key`=?", key).Scan(&value)
 	return value, nil
 }
 
-func UpdateDictValue(key, value string) error {
+func UpdateDict(key, value string) error {
 	manageDB.Exec("insert ignore into dict(`key`,`value`) values(?,?)", key, value)
 	manageDB.Exec("update dict set `value`=? where `key`=?", value, key)
 	return nil
@@ -22,7 +22,7 @@ func UpdateDictValue(key, value string) error {
 // 停机维护
 func QueryMaintain() (*pb.Maintain, error) {
 	maintain := &pb.Maintain{}
-	value, _ := QueryDictValue("maintain")
+	value, _ := QueryDict("maintain")
 	json.Unmarshal([]byte(value), maintain)
 	return maintain, nil
 }
@@ -34,5 +34,5 @@ func UpdateMaintain(startTime, endTime, content, allowList string) error {
 		Content:   content,
 		AllowList: allowList,
 	})
-	return UpdateDictValue("maintain", string(buf))
+	return UpdateDict("maintain", string(buf))
 }
