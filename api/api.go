@@ -29,36 +29,36 @@ func (err errorCmd) Error() string {
 type Handler func(*Context, any) (any, error)
 
 type apiEntry struct {
-	h      Handler
-	typ    reflect.Type
-	parser packageParser
+	h     Handler
+	typ   reflect.Type
+	codec packageCodec
 	// auth   gin.HandlerFunc
 }
 
 var apiEntries sync.Map
 
-type packageParser interface {
+type packageCodec interface {
 	Encode(any) ([]byte, error)
 	Decode([]byte) ([]byte, error)
 }
 
-type apiPackageParser struct{}
+type apiPackageCodec struct{}
 
-func (parser *apiPackageParser) Encode(data any) ([]byte, error) {
+func (codec *apiPackageCodec) Encode(data any) ([]byte, error) {
 	return json.Marshal(data)
 }
 
-func (parser *apiPackageParser) Decode(buf []byte) ([]byte, error) {
+func (codec *apiPackageCodec) Decode(buf []byte) ([]byte, error) {
 	return buf, nil
 }
 
-type cmdPackageParser struct{}
+type cmdPackageCodec struct{}
 
-func (parser *cmdPackageParser) Encode(data any) ([]byte, error) {
+func (codec *cmdPackageCodec) Encode(data any) ([]byte, error) {
 	return cmd.Encode("", data)
 }
 
-func (parser *cmdPackageParser) Decode(buf []byte) ([]byte, error) {
+func (codec *cmdPackageCodec) Decode(buf []byte) ([]byte, error) {
 	pkg, err := cmd.Decode(buf)
 	// 测试服万能签名12345678
 	if err != nil && !(err == cmd.ErrInvalidSign && internal.Config().IsTest() && pkg.Sign == "12345678") {
@@ -68,11 +68,11 @@ func (parser *cmdPackageParser) Decode(buf []byte) ([]byte, error) {
 }
 
 func handleCmd(name string, h Handler, i any) {
-	apiEntries.Store(name, &apiEntry{h: h, typ: reflect.TypeOf(i), parser: &cmdPackageParser{}})
+	apiEntries.Store(name, &apiEntry{h: h, typ: reflect.TypeOf(i), codec: &cmdPackageCodec{}})
 }
 
 func HandleAPI(name string, h Handler, i any) {
-	apiEntries.Store(name, &apiEntry{h: h, typ: reflect.TypeOf(i), parser: &apiPackageParser{}})
+	apiEntries.Store(name, &apiEntry{h: h, typ: reflect.TypeOf(i), codec: &apiPackageCodec{}})
 }
 
 func matchAPI(c *Context, id string) ([]byte, error) {
@@ -84,7 +84,7 @@ func matchAPI(c *Context, id string) ([]byte, error) {
 	}
 
 	api, _ := entry.(*apiEntry)
-	data, err := api.parser.Decode(rawData)
+	data, err := api.codec.Decode(rawData)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func matchAPI(c *Context, id string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return api.parser.Encode(resp)
+	return api.codec.Encode(resp)
 }
 
 // 处理游戏内请求

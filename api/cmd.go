@@ -15,7 +15,7 @@ type onlineArgs struct {
 }
 
 func init() {
-	cmd.Bind(ReportOnline, (*onlineArgs)(nil))
+	cmd.BindFunc(ReportOnline, (*onlineArgs)(nil))
 }
 
 func ReportOnline(ctx *cmd.Context, data any) {
