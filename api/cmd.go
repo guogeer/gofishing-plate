@@ -8,10 +8,10 @@ import (
 
 type onlineArgs struct {
 	Servers []struct {
-		ServerName string
-		Id         int
-		Num        int
-	}
+		ServerName string `json:"serverName,omitempty"`
+		Id         int    `json:"id,omitempty"`
+		Num        int    `json:"num,omitempty"`
+	} `json:"servers,omitempty"`
 }
 
 func init() {
