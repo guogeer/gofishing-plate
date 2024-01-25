@@ -51,16 +51,16 @@ func createFileName() string {
 // 向游戏内的玩家发送消息
 func SendMsg(uid int, msgId string, body any) error {
 	user, err := dao.GetRegUserInfo(uid)
-	log.Debugf("sendMsg player %d msgId %s ServerName %s error %v", uid, msgId, user.ServerName, err)
+	log.Debugf("sendMsg player %d msgId %s ServerName %s error %v", uid, msgId, user.ServerId, err)
 	if err != nil {
 		return err
 	}
 
-	if user.ServerName == "" {
-		user.ServerName = "hall"
+	if user.ServerId == "" {
+		user.ServerId = "hall"
 	}
 
-	cmd.Route(user.ServerName, msgId, body)
+	cmd.Route(user.ServerId, msgId, body)
 	return nil
 }
 

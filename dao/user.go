@@ -2,30 +2,32 @@ package dao
 
 import (
 	"gofishing-plate/internal/pb"
+	"strconv"
+	"strings"
+
 	// "github.com/guogeer/quasar/log"
 	"github.com/guogeer/quasar/config"
 )
 
 type UserInfo struct {
-	UId        int
-	Nickname   string
-	ChanId     string
-	Sex        int
-	Icon       string
-	OS         string
-	NetMode    string
-	PhoneBrand string
-	SubId      int
-	IP         string
-	ServerName string
-	OpenId     string
-	CreateTime string
-	AllOpenId  []string
-	VIP        int
-	RoomName   string
+	UId        int      `json:"uId,omitempty"`
+	Nickname   string   `json:"nickname,omitempty"`
+	ChanId     string   `json:"chanId,omitempty"`
+	Sex        int      `json:"sex,omitempty"`
+	Icon       string   `json:"icon,omitempty"`
+	OS         string   `json:"os,omitempty"`
+	NetMode    string   `json:"netMode,omitempty"`
+	PhoneBrand string   `json:"phoneBrand,omitempty"`
+	SubId      int      `json:"subId,omitempty"`
+	IP         string   `json:"ip,omitempty"`
+	ServerId   string   `json:"serverId,omitempty"`
+	OpenId     string   `json:"openId,omitempty"`
+	CreateTime string   `json:"createTime,omitempty"`
+	AllOpenId  []string `json:"allOpenId,omitempty"`
+	VIP        int      `json:"vip,omitempty"`
+	RoomName   string   `json:"roomName,omitempty"`
 
-	SuperPowers int64       // SP总数
-	Stat        *pb.StatBin `json:",omitempty"`
+	Stat *pb.StatBin `json:"stat,omitempty"`
 }
 
 func GetRegUserInfo(uid int) (*UserInfo, error) {
@@ -33,7 +35,16 @@ func GetRegUserInfo(uid int) (*UserInfo, error) {
 		UId:  uid,
 		Stat: &pb.StatBin{},
 	}
-	gameDB.QueryRow("select account_info,create_time from user_info where uid=?", uid).Scan(JSON(info), &info.CreateTime)
+	var gameLocation string
+	gameDB.QueryRow("select chan_id,game_location,nickname,sex,icon,create_time from user_info where uid=?", uid).Scan(
+		&info.ChanId, &gameLocation, &info.Nickname, &info.Sex, &info.Icon, &info.CreateTime)
+
+	values := strings.SplitN(gameLocation, ":", 2)
+	if len(values) > 1 {
+		info.ServerId = values[0]
+		info.SubId, _ = strconv.Atoi(values[1])
+	}
+
 	rs, _ := gameDB.Query("select open_id from user_plate where uid=?", uid)
 	for rs != nil && rs.Next() {
 		rs.Scan(&info.OpenId)
@@ -41,12 +52,6 @@ func GetRegUserInfo(uid int) (*UserInfo, error) {
 	}
 
 	gameDB.QueryRow("select bin from user_bin where uid=? and `class`=?", uid, "stat").Scan(PB(info.Stat))
-	for _, rowId := range config.Rows("super_power_up") {
-		id, _ := config.Int("super_power_up", rowId, "ItemId")
-		if itemStat, ok := info.Stat.Items[int32(id)]; ok {
-			info.SuperPowers += itemStat.CopyNum
-		}
-	}
 	info.RoomName, _ = config.String("Room", info.SubId, "RoomName")
 	return info, nil
 }
