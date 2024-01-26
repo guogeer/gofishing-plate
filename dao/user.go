@@ -36,7 +36,7 @@ func GetRegUserInfo(uid int) (*UserInfo, error) {
 		Stat: &pb.StatBin{},
 	}
 	var gameLocation string
-	gameDB.QueryRow("select chan_id,game_location,nickname,sex,icon,create_time from user_info where uid=?", uid).Scan(
+	gameDB.QueryRow("select chan_id,game_location,nickname,sex,icon,create_time from user_info where id=?", uid).Scan(
 		&info.ChanId, &gameLocation, &info.Nickname, &info.Sex, &info.Icon, &info.CreateTime)
 
 	values := strings.SplitN(gameLocation, ":", 2)
@@ -67,7 +67,7 @@ func QueryRegUser(uid int, chanId, openId string, timeRange []string, current, p
 
 	where := " where 1 = 1"
 	if uid > 0 {
-		where += " and uid=?"
+		where += " and id=?"
 		params = append(params, uid)
 	}
 	if chanId != "" {
