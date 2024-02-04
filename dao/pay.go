@@ -27,7 +27,7 @@ type PayOrderParams struct {
 type PayOrder struct {
 	Params           PayOrderParams
 	OrderId          string  // 订单ID
-	BuyUId           int     // 购买ID
+	BuyUid           int     // 购买ID
 	ItemId           int     // 商品ID
 	ExchangeCurrency string  // 当地货币类型，如HKD
 	ExchangePrice    float64 // 当地价格
@@ -46,7 +46,7 @@ type PayOrder struct {
 
 func AddPayOrder(order *PayOrder) error {
 	rs, err := manageDB.Exec("insert ignore into charge_order(order_id,game,pay_sdk,chan_id,buy_uid,item_id,item_num,currency,rmb,exchange_currency,exchange_price,result,params,create_time) values(?,?,?,?,?,?,?,?,?,?,?,?,?,now())",
-		order.OrderId, order.Game, order.PaySDK, order.ChanId, order.BuyUId, order.ItemId, 1, order.Currency, order.Price, order.ExchangeCurrency, order.ExchangePrice, 1, JSON(order.Params))
+		order.OrderId, order.Game, order.PaySDK, order.ChanId, order.BuyUid, order.ItemId, 1, order.Currency, order.Price, order.ExchangeCurrency, order.ExchangePrice, 1, JSON(order.Params))
 	if err != nil {
 		return err
 	}
@@ -113,7 +113,7 @@ func QueryPayOrder(orderId string, uid int, result, timeRange []string, current,
 	var orders []*PayOrder
 	for rs.Next() {
 		order := &PayOrder{}
-		err := rs.Scan(&order.OrderId, &order.BuyUId, &order.ChanId, &order.ItemId, &order.ExchangeCurrency, &order.ExchangePrice, &order.Currency, &order.Price, &order.Result, &order.PaySDK, JSON(&order.Params), &order.CreateTime)
+		err := rs.Scan(&order.OrderId, &order.BuyUid, &order.ChanId, &order.ItemId, &order.ExchangeCurrency, &order.ExchangePrice, &order.Currency, &order.Price, &order.Result, &order.PaySDK, JSON(&order.Params), &order.CreateTime)
 		if err != nil {
 			return nil, 0, "", err
 		}
@@ -142,7 +142,7 @@ func QueryPayOrder(orderId string, uid int, result, timeRange []string, current,
 
 type SubscriptionOrder struct {
 	Id            int
-	UId           int
+	Uid           int
 	OrderId       string
 	PurchaseToken string
 	ProductId     string
@@ -157,7 +157,7 @@ func DeferPurchaseSubscriptionOrder() (*SubscriptionOrder, error) {
 
 	tx, _ := manageDB.Begin()
 	err := tx.QueryRow("select id,buy_uid,defer_days,purchase_token,product_id,package_name,expire_millis from charge_subscription where defer_days>0 limit 1 for update").Scan(
-		&order.Id, &order.UId, &order.DeferDays, &order.PurchaseToken, &order.ProductId, &order.PackageName, &order.ExpireMillis)
+		&order.Id, &order.Uid, &order.DeferDays, &order.PurchaseToken, &order.ProductId, &order.PackageName, &order.ExpireMillis)
 	if err != sql.ErrNoRows {
 		tx.Exec("update charge_subscription set defer_days=defer_days-(?) where id=?", order.DeferDays, order.Id)
 	}
@@ -171,16 +171,16 @@ func UpdatePurchaseSubscriptionOrderExpiryTime(id int, expiryTimeMillis int64) e
 }
 
 func NotifyPurchaseSubscriptionOrder(order *SubscriptionOrder) error {
-	manageDB.Exec("delete from charge_subscription where buy_uid=?", order.UId)
+	manageDB.Exec("delete from charge_subscription where buy_uid=?", order.Uid)
 	manageDB.Exec("insert into charge_subscription(buy_uid,order_id,purchase_token,product_id,package_name,price,create_time) values(?,?,?,?,?,?,now())",
-		order.UId, order.OrderId, order.PurchaseToken, order.ProductId, order.PackageName, order.Price)
+		order.Uid, order.OrderId, order.PurchaseToken, order.ProductId, order.PackageName, order.Price)
 	return nil
 }
 
 func QueryPurchaseSubscriptionOrder(orderId string) (*SubscriptionOrder, error) {
 	var order SubscriptionOrder
 	manageDB.QueryRow("select id,buy_uid,order_id,product_id,price from charge_subscription where order_id=?", orderId).Scan(
-		&order.Id, &order.UId, &order.OrderId, &order.ProductId, &order.Price,
+		&order.Id, &order.Uid, &order.OrderId, &order.ProductId, &order.Price,
 	)
 	if order.OrderId == "" {
 		return nil, errors.New("empty order")

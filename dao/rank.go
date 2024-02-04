@@ -11,7 +11,7 @@ import (
 const maxBuildRankItem = 50
 
 type buildRankItem struct {
-	UId        int
+	Uid        int
 	Nickname   string
 	Icon       string
 	BuildLevel int
@@ -56,7 +56,7 @@ func GenerateBuildRank() {
 	for rs != nil && rs.Next() {
 		item := &buildRankItem{}
 		stat := &pb.StatBin{}
-		rs.Scan(&item.UId, &item.Nickname, &item.Icon, PB(stat))
+		rs.Scan(&item.Uid, &item.Nickname, &item.Icon, PB(stat))
 		item.BuildExp = int(stat.BuildExp)
 		item.BuildLevel = int(stat.BuildLevel)
 		if h.Len() >= maxBuildRankItem && (*h)[0].Score() < item.Score() {

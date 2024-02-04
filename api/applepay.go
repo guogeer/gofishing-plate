@@ -25,7 +25,7 @@ const (
 )
 
 type applePayArgs struct {
-	UId           int
+	Uid           int
 	ShopId        int
 	Receipt       string
 	ClientOrderId int
@@ -115,7 +115,7 @@ func addAppleOrder(c *Context, data any) (any, error) {
 		expireMillis, _ := strconv.ParseInt(matchReceipt.ExpiresDate, 10, 64)
 		subOrder := &internal.SimpleSubscriptionPurchase{
 			ExpiryTimeMillis: expireMillis,
-			DevelopPayload:   fmt.Sprintf("%d:%d:%d", args.UId, args.ShopId, internal.GetClientEnv()),
+			DevelopPayload:   fmt.Sprintf("%d:%d:%d", args.Uid, args.ShopId, internal.GetClientEnv()),
 			OrderId:          matchReceipt.TransactionId,
 			SubOrderId:       matchReceipt.OriginalTransactionId,
 			IsTest:           orderStatus == dao.PayOrderTest,
@@ -133,7 +133,7 @@ func addAppleOrder(c *Context, data any) (any, error) {
 		ExchangePrice:    price,
 		PaySDK:           "apple",
 		ItemId:           itemId,
-		BuyUId:           args.UId,
+		BuyUid:           args.Uid,
 	}
 	if err := addPayOrder(order); err != nil {
 		return nil, err
@@ -209,7 +209,7 @@ func handleAppleSubscription(rawData []byte) error {
 	orderId := getClaimValue(signedTransactionClaims, "transactionId")
 	notifyPurchaseSubscription(bundleId, originOrder.ProductId, "", &internal.SimpleSubscriptionPurchase{
 		ExpiryTimeMillis: int64(expireDate),
-		DevelopPayload:   fmt.Sprintf("%d:%d:%d", originOrder.UId, shopId, internal.GetClientEnv()),
+		DevelopPayload:   fmt.Sprintf("%d:%d:%d", originOrder.Uid, shopId, internal.GetClientEnv()),
 		OrderId:          orderId,
 		SubOrderId:       originOrderId,
 		IsTest:           data["environment"] == "Sandbox",

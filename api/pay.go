@@ -56,7 +56,7 @@ func addGoogleOrder(c *Context, data any) (any, error) {
 	}
 	// v4,{uid},{shop_id},{chan_id}
 	params := strings.Split(purchasesProducts.ObfuscatedExternalAccountId+",,,", ",")
-	order.BuyUId, _ = strconv.Atoi(params[1])
+	order.BuyUid, _ = strconv.Atoi(params[1])
 	order.ItemId, _ = strconv.Atoi(params[2])
 	order.ChanId = params[3]
 	if purchasesProducts.PurchaseType != nil && *purchasesProducts.PurchaseType == 0 {
@@ -91,7 +91,7 @@ func addTestOrder(c *Context) {
 		ExchangeCurrency: "USD",
 		PaySDK:           "test",
 		ItemId:           int(itemId),
-		BuyUId:           int(uid),
+		BuyUid:           int(uid),
 	}
 	e := addPayOrder(order)
 	if e != nil {
@@ -117,7 +117,7 @@ func addPayOrder(order *dao.PayOrder) error {
 		return errors.New("test env cannnot use test pay")
 	}
 
-	userInfo, err := dao.GetRegUserInfo(order.BuyUId)
+	userInfo, err := dao.GetRegUserInfo(order.BuyUid)
 	if err != nil {
 		return err
 	}
@@ -131,8 +131,8 @@ func addPayOrder(order *dao.PayOrder) error {
 		return err
 	}
 
-	SendMsg(int(userInfo.UId), "FUNC_Pay", cmd.M{
-		"UId":        int(userInfo.UId),
+	SendMsg(int(userInfo.Uid), "FUNC_Pay", cmd.M{
+		"Uid":        int(userInfo.Uid),
 		"Price":      price,
 		"ItemId":     order.ItemId,
 		"ItemNum":    1,
@@ -165,7 +165,7 @@ func notifyPurchaseSubscription(packageName, productId, purchaseToken string, da
 	}
 
 	dao.NotifyPurchaseSubscriptionOrder(&dao.SubscriptionOrder{
-		UId:           uid,
+		Uid:           uid,
 		PurchaseToken: purchaseToken,
 		PackageName:   packageName,
 		ProductId:     productId,
@@ -174,7 +174,7 @@ func notifyPurchaseSubscription(packageName, productId, purchaseToken string, da
 		Price:         price,
 	})
 	SendMsg(uid, "FUNC_UpdatePurchaseSubcription", cmd.M{
-		"UId":      uid,
+		"Uid":      uid,
 		"ExpireTs": data.ExpiryTimeMillis / 1000,
 	})
 
@@ -189,7 +189,7 @@ func notifyPurchaseSubscription(packageName, productId, purchaseToken string, da
 		ExchangePrice:    price,
 		PaySDK:           data.PaySDK,
 		ItemId:           int(itemId),
-		BuyUId:           int(uid),
+		BuyUid:           int(uid),
 	})
 }
 

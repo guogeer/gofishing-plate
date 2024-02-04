@@ -10,7 +10,7 @@ import (
 )
 
 type UserInfo struct {
-	UId        int      `json:"uId,omitempty"`
+	Uid        int      `json:"uid,omitempty"`
 	Nickname   string   `json:"nickname,omitempty"`
 	ChanId     string   `json:"chanId,omitempty"`
 	Sex        int      `json:"sex,omitempty"`
@@ -32,7 +32,7 @@ type UserInfo struct {
 
 func GetRegUserInfo(uid int) (*UserInfo, error) {
 	info := &UserInfo{
-		UId:  uid,
+		Uid:  uid,
 		Stat: &pb.StatBin{},
 	}
 	var gameLocation string
@@ -90,12 +90,12 @@ func QueryRegUser(uid int, chanId, openId string, timeRange []string, current, p
 
 	var queryUsers []int
 	for rs.Next() {
-		var queryUId int
-		rs.Scan(&queryUId)
-		queryUsers = append(queryUsers, queryUId)
+		var queryUid int
+		rs.Scan(&queryUid)
+		queryUsers = append(queryUsers, queryUid)
 	}
-	for _, queryUId := range queryUsers {
-		info, _ := GetRegUserInfo(queryUId)
+	for _, queryUid := range queryUsers {
+		info, _ := GetRegUserInfo(queryUid)
 		users = append(users, info)
 	}
 	return users, total, nil

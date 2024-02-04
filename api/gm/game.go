@@ -126,7 +126,7 @@ func queryItemLog(c *Context, req any) (any, error) {
 }
 
 type payOrderReq struct {
-	UId       int
+	Uid       int
 	OrderId   string
 	TimeRange []string
 	Result    []string
@@ -138,7 +138,7 @@ type payOrderReq struct {
 // 查询物品日志 /api/admin/payOrder
 func queryPayOrder(c *Context, req any) (any, error) {
 	args := req.(*payOrderReq)
-	payOrders, total, sum, _ := dao.QueryPayOrder(args.OrderId, args.UId, args.Result, args.TimeRange, args.Current, args.PageSize)
+	payOrders, total, sum, _ := dao.QueryPayOrder(args.OrderId, args.Uid, args.Result, args.TimeRange, args.Current, args.PageSize)
 
 	return M{
 		"data":  payOrders,
@@ -189,7 +189,7 @@ func handleConfigTable(c *Context, req any) (any, error) {
 }
 
 type regUserReq struct {
-	UId       int
+	Uid       int
 	OpenId    string
 	ChanId    string
 	TimeRange []string
@@ -203,15 +203,15 @@ func handleRegUser(c *Context, req any) (any, error) {
 	args := req.(*regUserReq)
 	switch args.Method {
 	case "query":
-		user, err := dao.GetRegUserInfo(args.UId)
+		user, err := dao.GetRegUserInfo(args.Uid)
 		return M{
 			"User": user,
 		}, err
 	case "delete":
-		buf, err := cmd.Request("hall", "FUNC_DeleteAccount", cmd.M{"UId": args.UId})
+		buf, err := cmd.Request("hall", "FUNC_DeleteAccount", cmd.M{"Uid": args.Uid})
 		return json.RawMessage(buf), err
 	}
-	data, total, err := dao.QueryRegUser(args.UId, args.ChanId, args.OpenId, args.TimeRange, args.Current, args.PageSize)
+	data, total, err := dao.QueryRegUser(args.Uid, args.ChanId, args.OpenId, args.TimeRange, args.Current, args.PageSize)
 	if err != nil {
 		return nil, err
 	}
@@ -223,7 +223,7 @@ func handleRegUser(c *Context, req any) (any, error) {
 }
 
 type addItemsReq struct {
-	UId   int
+	Uid   int
 	Items []struct {
 		Id  int
 		Num int64
@@ -233,8 +233,8 @@ type addItemsReq struct {
 // 发放补偿 /api/admin/addItems
 func addItems(c *Context, req any) (any, error) {
 	args := req.(*addItemsReq)
-	api.SendMsg(args.UId, "FUNC_AddItems", M{
-		"UId":   args.UId,
+	api.SendMsg(args.Uid, "FUNC_AddItems", M{
+		"Uid":   args.Uid,
 		"Items": args.Items,
 		"Way":   "gm_deal",
 	})
