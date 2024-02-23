@@ -1,13 +1,13 @@
 package ticker
 
 import (
+	"quasar/utils"
 	"time"
 
 	"gofishing-plate/internal"
 
 	"github.com/guogeer/quasar/config"
 	"github.com/guogeer/quasar/log"
-	"github.com/guogeer/quasar/util"
 )
 
 func tick12h() {
@@ -21,6 +21,6 @@ func init() {
 	log.Infof("config.xml node ProductName:%s", internal.Config().ProductName)
 	if internal.Config().ProductName == "farm" {
 		startTime, _ := config.ParseTime("2021-01-01 00:00:00")
-		util.NewPeriodTimer(tick12h, startTime, 12*time.Hour)
+		utils.NewPeriodTimer(tick12h, startTime, 12*time.Hour)
 	}
 }

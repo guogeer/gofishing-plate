@@ -7,6 +7,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"quasar/utils"
 	"runtime"
 
 	"gofishing-plate/api"
@@ -14,7 +15,6 @@ import (
 
 	"github.com/guogeer/quasar/cmd"
 	"github.com/guogeer/quasar/log"
-	"github.com/guogeer/quasar/util"
 )
 
 var (
@@ -47,6 +47,6 @@ func main() {
 	for {
 		// handle message
 		cmd.RunOnce()
-		util.GetTimerSet().RunOnce()
+		utils.GetTimerSet().RunOnce()
 	}
 }

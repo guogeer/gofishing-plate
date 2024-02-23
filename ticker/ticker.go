@@ -1,13 +1,13 @@
 package ticker
 
 import (
+	"quasar/utils"
 	"time"
 
 	"gofishing-plate/dao"
 	"gofishing-plate/internal"
 
 	"github.com/guogeer/quasar/config"
-	"github.com/guogeer/quasar/util"
 )
 
 func tick1d() {
@@ -23,6 +23,6 @@ func tick10m() {
 
 func init() {
 	startTime, _ := config.ParseTime("2021-01-01 00:10:00")
-	util.NewPeriodTimer(tick1d, startTime, 24*time.Hour)
-	util.NewPeriodTimer(tick10m, startTime, 10*time.Minute)
+	utils.NewPeriodTimer(tick1d, startTime, 24*time.Hour)
+	utils.NewPeriodTimer(tick10m, startTime, 10*time.Minute)
 }

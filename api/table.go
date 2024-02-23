@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"quasar/utils"
 	"regexp"
 	"sort"
 	"strings"
@@ -18,7 +19,6 @@ import (
 	"github.com/guogeer/quasar/cmd"
 	"github.com/guogeer/quasar/config"
 	"github.com/guogeer/quasar/log"
-	"github.com/guogeer/quasar/util"
 )
 
 var resourceTableDir string
@@ -161,7 +161,7 @@ func getNewestConfigTableUrl() string {
 // 2、tbl格式转成json
 // 3、压缩成zip文件
 func compressConfigTables() error {
-	tmpDir := "/tmp/" + util.GUID()
+	tmpDir := "/tmp/" + utils.GUID()
 	os.MkdirAll(tmpDir, 0755)
 
 	tables, err := dao.QueryAllConfigTable()
@@ -202,7 +202,7 @@ func compressConfigTables() error {
 
 // POST file 上传配置表
 func uploadConfigTables(c *Context) {
-	path := internal.Config().ResourcePath + "/" + util.GUID() + ".zip"
+	path := internal.Config().ResourcePath + "/" + utils.GUID() + ".zip"
 	file, _ := c.FormFile("from_svn")
 	if err := c.SaveUploadedFile(file, path); err != nil {
 		log.Errorf("save upload file fail: %v", err)
