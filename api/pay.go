@@ -65,7 +65,7 @@ func addGoogleOrder(c *Context, data any) (any, error) {
 	if err := addPayOrder(order); err != nil {
 		return nil, err
 	}
-	return cmd.M{"Code": 0}, nil
+	return cmd.M{"code": 0}, nil
 }
 
 // 测试支付
@@ -96,13 +96,13 @@ func addTestOrder(c *Context) {
 	e := addPayOrder(order)
 	if e != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"Code": e,
-			"Msg":  e.Error(),
+			"code": e,
+			"msg":  e.Error(),
 		})
 	} else {
 		c.JSON(http.StatusOK, gin.H{
-			"Code": 0,
-			"Msg":  "success",
+			"code": 0,
+			"msg":  "success",
 		})
 	}
 }

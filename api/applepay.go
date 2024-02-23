@@ -122,7 +122,7 @@ func addAppleOrder(c *Context, data any) (any, error) {
 			PaySDK:           "apple",
 		}
 		notifyPurchaseSubscription(matchReceipt.BundleId, matchReceipt.ProductId, "", subOrder)
-		return cmd.M{"Code": 0, "ClientOrderId": args.ClientOrderId}, nil
+		return cmd.M{"code": 0, "ClientOrderId": args.ClientOrderId}, nil
 	}
 
 	// 增加订单
@@ -138,7 +138,7 @@ func addAppleOrder(c *Context, data any) (any, error) {
 	if err := addPayOrder(order); err != nil {
 		return nil, err
 	}
-	return cmd.M{"Code": 0, "ClientOrderId": args.ClientOrderId}, nil
+	return cmd.M{"code": 0, "ClientOrderId": args.ClientOrderId}, nil
 }
 
 func notifyAppleSubscription(ctx *Context) {
@@ -146,9 +146,9 @@ func notifyAppleSubscription(ctx *Context) {
 	log.Debugf("notify apple subscription %s", rawData)
 
 	err := handleAppleSubscription(rawData)
-	response := cmd.M{"Code": 0, "Msg": "ok"}
+	response := cmd.M{"code": 0, "msg": "ok"}
 	if err != nil {
-		response = cmd.M{"Code": 1, "Msg": err.Error()}
+		response = cmd.M{"code": 1, "msg": err.Error()}
 	}
 	ctx.JSON(http.StatusOK, response)
 }

@@ -82,9 +82,9 @@ func queryCurrentUser(c *Context) {
 	value, ok := c.Get("claims")
 	if !ok {
 		c.JSON(200, M{
-			"Code":      1,
-			"Msg":       "登陆会话已过期",
-			"IsExpired": true,
+			"code":      1,
+			"msg":       "登陆会话已过期",
+			"isExpired": true,
 		})
 		return
 	}
@@ -93,14 +93,14 @@ func queryCurrentUser(c *Context) {
 	account, err := dao.GetGmAccount(claims.Username)
 	if err != nil {
 		c.JSON(200, M{
-			"Code": 1,
-			"Msg":  err.Error(),
+			"code": 1,
+			"msg":  err.Error(),
 		})
 		return
 	}
 	c.JSON(200, M{
-		"Code": 0,
-		"Msg":  "ok",
+		"code": 0,
+		"msg":  "ok",
 		"data": M{
 			// "avatar":  "https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png",
 			"name":      claims.Username,

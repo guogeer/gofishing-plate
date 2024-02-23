@@ -210,9 +210,9 @@ func uploadConfigTables(c *Context) {
 	err := saveConfigTables(path)
 	os.Remove(path)
 
-	httpStatus, response := 200, M{"Code": 0, "Msg": "ok"}
+	httpStatus, response := 200, M{"code": 0, "msg": "ok"}
 	if err != nil {
-		httpStatus, response = 500, M{"Code": 1, "Msg": err.Error()}
+		httpStatus, response = 500, M{"code": 1, "msg": err.Error()}
 	}
 	c.PureJSON(httpStatus, response)
 }

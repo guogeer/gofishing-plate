@@ -70,5 +70,5 @@ func clientBundle(c *Context, data any) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	return M{"Code": 0, "Msg": "ok", "data": clientBundles}, nil
+	return M{"code": 0, "msg": "ok", "data": clientBundles}, nil
 }

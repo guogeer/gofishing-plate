@@ -113,7 +113,7 @@ func dispatchAPI(c *Context) {
 
 	buf, err := matchAPI(c, c.Request.RequestURI)
 	if err != nil {
-		buf, _ = json.Marshal(map[string]any{"Code": 1, "Msg": err.Error()})
+		buf, _ = json.Marshal(map[string]any{"code": 1, "msg": err.Error()})
 		log.Warnf("dispatch api error: %v", err)
 	}
 	c.Data(200, "application/json", buf)

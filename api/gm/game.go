@@ -176,7 +176,7 @@ func handleConfigTable(c *Context, req any) (any, error) {
 
 		log.Debugf("update config table %s success", args.Name)
 		cmd.Forward("*", "FUNC_EffectConfigTable", cmd.M{"Tables": []string{args.Name}})
-		return M{"Code": 0, "Msg": "ok"}, nil
+		return M{"code": 0, "msg": "ok"}, nil
 	}
 	table, err := dao.QueryConfigTable(args.Name)
 	if err != nil {
@@ -240,8 +240,8 @@ func addItems(c *Context, req any) (any, error) {
 	})
 
 	return M{
-		"Code": 0,
-		"Msg":  "ok",
+		"code": 0,
+		"msg":  "ok",
 	}, nil
 }
 
