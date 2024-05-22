@@ -7,8 +7,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"quasar/utils"
 	"runtime"
+
+	"github.com/guogeer/quasar/utils"
 
 	"gofishing-plate/api"
 	_ "gofishing-plate/api/gm"

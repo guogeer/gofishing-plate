@@ -1,8 +1,9 @@
 package ticker
 
 import (
-	"quasar/utils"
 	"time"
+
+	"github.com/guogeer/quasar/utils"
 
 	"gofishing-plate/internal"
 
