@@ -29,7 +29,7 @@ func init() {
 	resourceTableDir = internal.Config().ResourcePath + "/tables"
 	compressConfigTables()
 
-	cmd.Bind("func_effectConfigTable", funcEffectConfigTable, (*tableArgs)(nil)).SetNoQueue()
+	cmd.Bind("func_effectConfigTable", funcEffectConfigTable, (*tableArgs)(nil), cmd.WithoutQueue())
 }
 
 // 加载配置
