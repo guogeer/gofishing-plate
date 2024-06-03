@@ -86,8 +86,8 @@ func savePlateIcon(c *Context, in any) (any, error) {
 	iconPath := internal.Config().ResourcePath + "/" + u.Host + "/" + args.IconName
 	// 文件存在
 	if _, err := os.Stat(iconPath); err == nil {
-		return cmd.M{"Path": internal.Config().ResourceURL + "/" + iconPath}, nil
+		return cmd.M{"path": internal.Config().ResourceURL + "/" + iconPath}, nil
 	}
 
-	return cmd.M{"Path": internal.Config().ResourceURL + "/" + iconPath}, nil
+	return cmd.M{"path": internal.Config().ResourceURL + "/" + iconPath}, nil
 }

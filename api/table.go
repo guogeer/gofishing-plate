@@ -110,7 +110,7 @@ func saveConfigTables(path string) error {
 		tables = append(tables, name)
 	}
 	log.Debugf("upload config tables %s success", strings.Join(tables, ","))
-	cmd.Forward("*", "FUNC_EffectConfigTable", cmd.M{"Tables": tables})
+	cmd.Forward("*", "func_effectConfigTable", cmd.M{"tables": tables})
 	if err := compressConfigTables(); err != nil {
 		log.Errorf("compress config tables fail: %v", err)
 	}
@@ -172,8 +172,8 @@ func compressConfigTables() error {
 	for _, table := range tables {
 		clientTable := config.ExportConfigTable([]byte(table.Content))
 		buf, _ := json.Marshal(cmd.M{
-			"Table": json.RawMessage(clientTable),
-			"Name":  table.Name,
+			"table": json.RawMessage(clientTable),
+			"name":  table.Name,
 		})
 		os.WriteFile(tmpDir+"/"+table.Name+".json", buf, 0644)
 	}

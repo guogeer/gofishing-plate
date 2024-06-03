@@ -19,7 +19,7 @@ func ClientVersionAdd(c *Context, data any) (any, error) {
 	dao.AddClientVersion(clientVersion)
 
 	// 向大厅发送GM更新消息
-	cmd.Forward("hall", "FUNC_UpdateClientVersion", M{})
+	cmd.Forward("hall", "func_updateClientVersion", M{})
 	return M{}, nil
 }
 
@@ -29,7 +29,7 @@ func ClientVersionDelete(c *Context, data any) (any, error) {
 	dao.DeleteClientVersion(clientVersion.Id)
 
 	// 向大厅发送GM更新消息
-	cmd.Forward("hall", "FUNC_UpdateClientVersion", M{})
+	cmd.Forward("hall", "func_updateClientVersion", M{})
 	return M{}, nil
 }
 
@@ -38,12 +38,12 @@ func ClientVersionUpdate(c *Context, data any) (any, error) {
 	dao.UpdateClientVersion(clientVersion)
 
 	// 向大厅发送GM更新消息
-	cmd.Forward("hall", "FUNC_UpdateClientVersion", M{})
+	cmd.Forward("hall", "func_updateClientVersion", M{})
 	return M{}, nil
 }
 
 func GetRemoteIP(c *Context, data any) (any, error) {
-	return M{"IP": c.ClientIP()}, nil
+	return M{"ip": c.ClientIP()}, nil
 }
 
 type clientBundleReq struct {

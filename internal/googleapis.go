@@ -41,7 +41,7 @@ type pubsubNotification struct {
 
 	TestNotification struct {
 		Version string `json:"version"`
-	} `json:"TestNotification"`
+	} `json:"testNotification"`
 }
 
 type SubscriptionPurchase = androidpublisher.SubscriptionPurchase

@@ -52,7 +52,7 @@ func GetRegUserInfo(uid int) (*UserInfo, error) {
 	}
 
 	gameDB.QueryRow("select bin from user_bin where uid=? and `class`=?", uid, "stat").Scan(PB(info.Stat))
-	info.RoomName, _ = config.String("Room", info.SubId, "RoomName")
+	info.RoomName, _ = config.String("room", info.SubId, "roomName")
 	return info, nil
 }
 

@@ -25,10 +25,10 @@ func queryOnline(c *Context, req any) (any, error) {
 	online, _ := dao.QueryOnline(args.SubId, args.Curdate)
 
 	games := map[int]string{}
-	for _, rowId := range config.Rows("Room") {
+	for _, rowId := range config.Rows("room") {
 		var subId int
 		var roomName string
-		config.Scan("Room", rowId, "RoomID,RoomName", &subId, &roomName)
+		config.Scan("room", rowId, "roomID,roomName", &subId, &roomName)
 		games[subId] = roomName
 	}
 
@@ -175,7 +175,7 @@ func handleConfigTable(c *Context, req any) (any, error) {
 		}
 
 		log.Debugf("update config table %s success", args.Name)
-		cmd.Forward("*", "FUNC_EffectConfigTable", cmd.M{"Tables": []string{args.Name}})
+		cmd.Forward("*", "func_effectConfigTable", cmd.M{"tables": []string{args.Name}})
 		return M{"code": 0, "msg": "ok"}, nil
 	}
 	table, err := dao.QueryConfigTable(args.Name)
@@ -184,7 +184,7 @@ func handleConfigTable(c *Context, req any) (any, error) {
 	}
 
 	return M{
-		"Table": table.Table,
+		"table": table.Table,
 	}, nil
 }
 
@@ -205,10 +205,10 @@ func handleRegUser(c *Context, req any) (any, error) {
 	case "query":
 		user, err := dao.GetRegUserInfo(args.Uid)
 		return M{
-			"User": user,
+			"user": user,
 		}, err
 	case "delete":
-		buf, err := cmd.Request("hall", "FUNC_DeleteAccount", cmd.M{"Uid": args.Uid})
+		buf, err := cmd.Request("hall", "func_deleteAccount", cmd.M{"uid": args.Uid})
 		return json.RawMessage(buf), err
 	}
 	data, total, err := dao.QueryRegUser(args.Uid, args.ChanId, args.OpenId, args.TimeRange, args.Current, args.PageSize)
@@ -233,10 +233,10 @@ type addItemsReq struct {
 // 发放补偿 /api/admin/addItems
 func addItems(c *Context, req any) (any, error) {
 	args := req.(*addItemsReq)
-	api.SendMsg(args.Uid, "FUNC_AddItems", M{
-		"Uid":   args.Uid,
-		"Items": args.Items,
-		"Way":   "gm_deal",
+	api.SendMsg(args.Uid, "func_addItems", M{
+		"uid":   args.Uid,
+		"items": args.Items,
+		"way":   "gm_deal",
 	})
 
 	return M{
@@ -277,7 +277,7 @@ func handleMaintain(c *Context, req any) (any, error) {
 		if err != nil {
 			return nil, err
 		}
-		cmd.Route("hall", "FUNC_UpdateMaintain", cmd.M{})
+		cmd.Route("hall", "func_updateMaintain", cmd.M{})
 		return cmd.M{}, nil
 	}
 	resp, err := dao.QueryMaintain()
@@ -289,10 +289,10 @@ func handleMaintain(c *Context, req any) (any, error) {
 		timeRange = []string{resp.StartTime, resp.EndTime}
 	}
 	return cmd.M{
-		"TimeRange": timeRange,
-		"Content":   resp.Content,
-		"AllowList": resp.AllowList,
-		"IP":        c.ClientIP(),
+		"timeRange": timeRange,
+		"content":   resp.Content,
+		"allowList": resp.AllowList,
+		"ip":        c.ClientIP(),
 	}, nil
 }
 
@@ -310,9 +310,9 @@ type mailReq struct {
 func handleMail(c *Context, req any) (any, error) {
 	args := req.(*mailReq)
 	if args.Action == "add" {
-		cmd.Route("hall", "FUNC_SendMail", cmd.M{
-			"Users": args.RecvUsers,
-			"Mail":  args.Mail,
+		cmd.Route("hall", "func_sendMail", cmd.M{
+			"users": args.RecvUsers,
+			"mail":  args.Mail,
 		})
 		return cmd.M{}, nil
 	}

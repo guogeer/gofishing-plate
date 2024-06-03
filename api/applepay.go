@@ -93,18 +93,18 @@ func addAppleOrder(c *Context, data any) (any, error) {
 	itemId := args.ShopId
 	matchReceipt := response.Receipt
 	if itemId == 0 {
-		matchRows := config.FilterRows("Shop", "AppleShopId", matchReceipt.ProductId)
+		matchRows := config.FilterRows("shop", "appleShopId", matchReceipt.ProductId)
 		for _, rowId := range matchRows {
-			config.Scan("Shop", rowId, "ID", &itemId)
+			config.Scan("shop", rowId, "id", &itemId)
 		}
 
 	}
-	configShopId, _ := config.String("Shop", itemId, "AppleShopId")
+	configShopId, _ := config.String("shop", itemId, "appleShopId")
 	if configShopId != matchReceipt.ProductId {
 		return nil, errors.New("shopId not match receipt-data product_id")
 	}
 
-	price, _ := config.Float("Shop", itemId, "ShopsPrice")
+	price, _ := config.Float("shop", itemId, "shopsPrice")
 	// 付费订阅
 	if response.AutoRenewProductId != "" {
 		if response.LatestReceiptInfo == nil {
@@ -138,7 +138,7 @@ func addAppleOrder(c *Context, data any) (any, error) {
 	if err := addPayOrder(order); err != nil {
 		return nil, err
 	}
-	return cmd.M{"code": 0, "ClientOrderId": args.ClientOrderId}, nil
+	return cmd.M{"code": 0, "clientOrderId": args.ClientOrderId}, nil
 }
 
 func notifyAppleSubscription(ctx *Context) {
@@ -195,9 +195,9 @@ func handleAppleSubscription(rawData []byte) error {
 	}
 
 	shopId := 0
-	shopRows := config.FilterRows("Shop", "AppleShopId", originOrder.ProductId)
+	shopRows := config.FilterRows("shop", "appleShopId", originOrder.ProductId)
 	for _, rowId := range shopRows {
-		config.Scan("Shop", rowId, "Id", &shopId)
+		config.Scan("shop", rowId, "id", &shopId)
 	}
 	if shopId == 0 {
 		return errors.New("invalid shop item: " + originOrder.ProductId)
@@ -205,7 +205,7 @@ func handleAppleSubscription(rawData []byte) error {
 
 	// {uid}:{item_id}:{env}
 	bundleId := getClaimValue(signedTransactionClaims, "bundleId")
-	expireDate, _ := strconv.ParseFloat(getClaimValue(signedTransactionClaims, "expiresDate"), 10)
+	expireDate, _ := strconv.ParseFloat(getClaimValue(signedTransactionClaims, "expiresDate"), 32)
 	orderId := getClaimValue(signedTransactionClaims, "transactionId")
 	notifyPurchaseSubscription(bundleId, originOrder.ProductId, "", &internal.SimpleSubscriptionPurchase{
 		ExpiryTimeMillis: int64(expireDate),

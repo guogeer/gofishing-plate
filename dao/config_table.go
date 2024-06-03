@@ -18,7 +18,7 @@ func GetConfigTableItem() []*ItemRow {
 	for _, rowId := range config.Rows("item") {
 		var itemId int
 		var itemName string
-		config.Scan("item", rowId, "ShopID,ShopTitle", &itemId, &itemName)
+		config.Scan("item", rowId, "shopID,shopTitle", &itemId, &itemName)
 		rows = append(rows, &ItemRow{ShopID: itemId, ShopTitle: itemName})
 	}
 	return rows
@@ -33,7 +33,7 @@ func GetConfigTableItemLog() []*ItemLogRow {
 	var rows []*ItemLogRow
 	for _, rowId := range config.Rows("item_log") {
 		var way, name string
-		config.Scan("item_log", rowId, "Way,Name", &way, &name)
+		config.Scan("item_log", rowId, "way,name", &way, &name)
 		rows = append(rows, &ItemLogRow{Way: way, Name: name})
 	}
 	return rows

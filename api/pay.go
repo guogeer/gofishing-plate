@@ -109,7 +109,7 @@ func addTestOrder(c *Context) {
 
 // 完成订单。增加订单并发放奖励
 func addPayOrder(order *dao.PayOrder) error {
-	price, _ := config.Float("Shop", order.ItemId, "ShopsPrice")
+	price, _ := config.Float("shop", order.ItemId, "shopsPrice")
 	order.Price = price
 	order.ExchangePrice = price
 	order.Currency = "USD"
@@ -131,16 +131,16 @@ func addPayOrder(order *dao.PayOrder) error {
 		return err
 	}
 
-	SendMsg(int(userInfo.Uid), "FUNC_Pay", cmd.M{
-		"Uid":        int(userInfo.Uid),
-		"Price":      price,
-		"ItemId":     order.ItemId,
-		"ItemNum":    1,
-		"Vip":        userInfo.VIP,
-		"IsTest":     order.Result == dao.PayOrderTest,
-		"OrderId":    order.OrderId,
-		"PaySDK":     order.PaySDK,
-		"IsFirstPay": order.IsFirst,
+	SendMsg(int(userInfo.Uid), "func_pay", cmd.M{
+		"uid":        int(userInfo.Uid),
+		"price":      price,
+		"itemId":     order.ItemId,
+		"itemNum":    1,
+		"vip":        userInfo.VIP,
+		"isTest":     order.Result == dao.PayOrderTest,
+		"orderId":    order.OrderId,
+		"paySDK":     order.PaySDK,
+		"isFirstPay": order.IsFirst,
 	})
 
 	return nil
@@ -158,7 +158,7 @@ func notifyPurchaseSubscription(packageName, productId, purchaseToken string, da
 
 	uid, _ := strconv.Atoi(params[0])
 	itemId, _ := strconv.Atoi(params[1])
-	price, _ := config.Float("Shop", itemId, "ShopsPrice")
+	price, _ := config.Float("shop", itemId, "shopsPrice")
 
 	if data.SubOrderId == "" {
 		data.SubOrderId = data.OrderId
@@ -173,9 +173,9 @@ func notifyPurchaseSubscription(packageName, productId, purchaseToken string, da
 		OrderId:       data.SubOrderId,
 		Price:         price,
 	})
-	SendMsg(uid, "FUNC_UpdatePurchaseSubcription", cmd.M{
-		"Uid":      uid,
-		"ExpireTs": data.ExpiryTimeMillis / 1000,
+	SendMsg(uid, "func_updatePurchaseSubcription", cmd.M{
+		"uid":      uid,
+		"expireTs": data.ExpiryTimeMillis / 1000,
 	})
 
 	orderStatus := dao.PayOrderFinish

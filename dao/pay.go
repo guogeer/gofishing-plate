@@ -25,23 +25,23 @@ type PayOrderParams struct {
 }
 
 type PayOrder struct {
-	Params           PayOrderParams
-	OrderId          string  // 订单ID
-	BuyUid           int     // 购买ID
-	ItemId           int     // 商品ID
-	ExchangeCurrency string  // 当地货币类型，如HKD
-	ExchangePrice    float64 // 当地价格
-	CreateTime       string
-	ChanId           string
-	PaySDK           string
-	Game             string
-	Result           int32
-	Price            float64
-	Currency         string
-	IsFirst          bool
-	ItemName         string
-	RoomName         string
-	CountPrice       string
+	Params           PayOrderParams `json:"params,omitempty"`
+	OrderId          string         `json:"orderId,omitempty"`          // 订单ID
+	BuyUid           int            `json:"buyUid,omitempty"`           // 购买ID
+	ItemId           int            `json:"itemId,omitempty"`           // 商品ID
+	ExchangeCurrency string         `json:"exchangeCurrency,omitempty"` // 当地货币类型，如HKD
+	ExchangePrice    float64        `json:"exchangePrice,omitempty"`    // 当地价格
+	CreateTime       string         `json:"createTime,omitempty"`
+	ChanId           string         `json:"chanId,omitempty"`
+	PaySDK           string         `json:"paySDK,omitempty"`
+	Game             string         `json:"game,omitempty"`
+	Result           int32          `json:"result,omitempty"`
+	Price            float64        `json:"price,omitempty"`
+	Currency         string         `json:"currency,omitempty"`
+	IsFirst          bool           `json:"isFirst,omitempty"`
+	ItemName         string         `json:"itemName,omitempty"`
+	RoomName         string         `json:"roomName,omitempty"`
+	CountPrice       string         `json:"countPrice,omitempty"`
 }
 
 func AddPayOrder(order *PayOrder) error {
@@ -118,8 +118,8 @@ func QueryPayOrder(orderId string, uid int, result, timeRange []string, current,
 			return nil, 0, "", err
 		}
 
-		order.RoomName, _ = config.String("Room", order.Params.SubId, "RoomName")
-		order.ItemName, _ = config.String("Shop", order.ItemId, "ShopTitle")
+		order.RoomName, _ = config.String("room", order.Params.SubId, "roomName")
+		order.ItemName, _ = config.String("shop", order.ItemId, "shopTitle")
 
 		countPrice := "汇率缺失"
 		currency, exchangeCurrency := order.Currency, order.ExchangeCurrency

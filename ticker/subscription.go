@@ -49,9 +49,9 @@ func batchDeferPurchaseSubscription() {
 		log.Infof("defer purchase subscription order id %d NewExpiryTimeMillis %d", order.Id, expiryTimeMillis)
 
 		// 通知到游戏内
-		SendMsg(order.Uid, "FUNC_UpdatePurchaseScription", cmd.M{
-			"Uid":      order.Uid,
-			"ExpireTs": expiryTimeMillis / 1000,
+		SendMsg(order.Uid, "func_updatePurchaseScription", cmd.M{
+			"uid":      order.Uid,
+			"expireTs": expiryTimeMillis / 1000,
 		})
 	}
 }
